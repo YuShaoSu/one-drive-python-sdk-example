@@ -3,7 +3,7 @@ from onedrivesdk import get_default_client
 from PIL import Image
 import multiprocessing as mp
 from config import client_id, client_secret, scopes, redirect_uri
-from tqdm import tqdm, trange
+from tqdm import trange
 
 def connect():
     client = get_default_client(client_id=client_id, scopes=scopes)
@@ -97,12 +97,17 @@ while True:
     elif command[0] == 'd':
         if len(command) == 1:
             print('Error: Please give an item name!\n')
-        elif command[1] not in item_dict.keys():
-            print('Error: File not found.\n')
         else:
-            item_list = [item_dict[command[i]] for i in range(1, len(command))]
-            name_list = [name[command[i]] for i in range(1, len(command))]
-            download(client, item_list, name_list)
+            item_list = []
+            name_list = []
+            for i in range(1, len(command)):
+                if command[i] not in item_dict.keys():
+                    print('Error: File index ', command[i], ' not found.\n')
+                else:
+                    item_list.append(item_dict[command[i]])
+                    name_list.append(name[command[i]])
+                if len(item_list) != 0:
+                    download(client, item_list, name_list)
     elif command[0] == 'h':
         help()
     

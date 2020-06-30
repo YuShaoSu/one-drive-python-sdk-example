@@ -5,6 +5,7 @@
 - `$ pip3 install pillow`
 - `$ pip3 install onedrivesdk`
 - `$ pip3 install requests`
+- `$ pip3 install tqdm`
 - `$ cp config.sample.py config.py`
 - replace **redirect_uri**, **client_secret**, **client_id**
 
