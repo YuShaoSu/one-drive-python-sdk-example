@@ -1,7 +1,9 @@
 from onedrivesdk.helpers import GetAuthCodeServer
 from onedrivesdk import get_default_client
 from PIL import Image
+import multiprocessing as mp
 from config import client_id, client_secret, scopes, redirect_uri
+from tqdm import tqdm, trange
 
 def connect():
     client = get_default_client(client_id=client_id, scopes=scopes)
@@ -41,6 +43,13 @@ def show(client, item_id):
     image = Image.open('./tmp_thumb.jpg')
     image.show()
 
+
+def download(client, item_id, item_name):
+    # directory = input("Enter download directory (can be relative): ")
+    for i in trange(0, len(item_id)):
+        client.item(id=item_id[i]).download('./' + item_name[i])
+
+
 def help():
     print('Command list:')
     print('l + INDEX\tlist\t\tList all item under the folder.')
@@ -62,9 +71,6 @@ item_dict, folder_dict, name = ls(client, item_id, '/')
 
 while True:
     command = input('Please input a command: ').split(' ')
-    if len(command) > 2:
-        print('Error: Input length too long. expect 2, got \n', len(command))
-        continue
 
     if command[0] == 'l':
         if len(command) == 1:
@@ -88,6 +94,15 @@ while True:
             print('Error: File not found.\n')
         else:
             show(client, item_dict[command[1]])
+    elif command[0] == 'd':
+        if len(command) == 1:
+            print('Error: Please give an item name!\n')
+        elif command[1] not in item_dict.keys():
+            print('Error: File not found.\n')
+        else:
+            item_list = [item_dict[command[i]] for i in range(1, len(command))]
+            name_list = [name[command[i]] for i in range(1, len(command))]
+            download(client, item_list, name_list)
     elif command[0] == 'h':
         help()
     
