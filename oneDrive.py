@@ -60,6 +60,8 @@ def help():
     print('Command list:')
     print('l + INDEX\tlist\t\tList all item under the folder.')
     print('s + INDEX\tshow\t\tView thumbnails for an item.')
+    print('d + INDICES\tdownload\t\tDownload multiple files, each seperate by a space.')
+    print('rm + INDICES\tdownload\t\tRemove a file.')
     print('')
 
 
