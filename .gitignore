@@ -1,3 +1,5 @@
-config.py
-__pycache__/
-*.jpg
+*
+!config.sample.py
+!issue.md
+!oneDrive.py
+!Readme.md
