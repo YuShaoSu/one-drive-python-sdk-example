@@ -50,6 +50,12 @@ def download(client, item_id, item_name):
         client.item(id=item_id[i]).download('./' + item_name[i])
 
 
+def delete(client, item_id, path, name, current_id):
+    confirm = input('Are you sure you want to delete ' + path + name + '? Y/N: ')
+    if confirm == 'Y':
+        client.item(id=item_id).delete()    
+
+
 def help():
     print('Command list:')
     print('l + INDEX\tlist\t\tList all item under the folder.')
@@ -59,7 +65,7 @@ def help():
 
 client = connect()
 
-item_id = 'root'
+current_id = 'root'
 current = ''
 print('*' * 29)
 print('* Welcome! Type h for help. *')
@@ -67,7 +73,7 @@ print('*' * 29, '\n')
 item_dict = {}
 folder_dict = {}
 name = {}
-item_dict, folder_dict, name = ls(client, item_id, '/')
+item_dict, folder_dict, name = ls(client, current_id, '/')
 
 while True:
     command = input('Please input a command: ').split(' ')
@@ -85,6 +91,7 @@ while True:
             continue
         else:
             current += '/' + name[command[1]]
+            current_id = folder_dict[command[1]]
             item_dict, folder_dict, name = ls(
                 client, folder_dict[command[1]], current)
     elif command[0] == 's':
@@ -108,6 +115,16 @@ while True:
                     name_list.append(name[command[i]])
                 if len(item_list) != 0:
                     download(client, item_list, name_list)
+    elif command[0] == 'rm':
+        if len(command) == 1:
+            print('Error: Please give an item name!\n')
+        else:
+            if command[1] not in item_dict.keys():
+                print('Error: File index ', command[1], ' not found.\n')
+            else:
+                delete(client, item_dict[command[1]], current, name[command[1]], current_id)
+                item_dict, folder_dict, name = ls(client, current_id, current)
+
     elif command[0] == 'h':
         help()
     
